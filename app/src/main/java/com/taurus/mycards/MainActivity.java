@@ -34,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+       
         //初始化NFC
         initView();
+        nfcCheck();
         initNfcObject();
+        
 
     }
     //初始化视图
@@ -102,5 +104,27 @@ public class MainActivity extends AppCompatActivity {
                 .append("String:").append(tagFromIntent.toString()).append("\n");
         nfcContentViewer.setText(contentBuilder.toString());
         //todo somethine with tagFromIntent
+    }
+
+
+    /**
+     * 检测是否支持 NFC
+     */
+    private void nfcCheck() {
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            String info = "手机不支付NFC功能";
+            toast(info);
+            return;
+        }
+        if (!mNfcAdapter.isEnabled()) {
+            String info = "手机NFC功能没有打开";
+            toast(info);
+            Intent setNfc = new Intent(Settings.ACTION_NFC_SETTINGS);
+            startActivity(setNfc);
+        } else {
+            String info = "手机NFC功能正常";
+            toast(info);
+        }
     }
 }
